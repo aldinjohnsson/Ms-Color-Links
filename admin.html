@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Página de Links</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<!-- carrega o conteúdo atual do site; se o arquivo não existir, o admin abre com o padrão -->
+<script src="config.js"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{--p-bg:#14130f;--p-panel:#1d1b16;--p-panel-2:#262219;--p-line:#3a352b;--p-text:#f2ede2;--p-muted:#a59c8c;--p-accent:#c2a261;--p-danger:#c45a5a}
+  body{font-family:"Montserrat",sans-serif;background:var(--p-bg);color:var(--p-text);min-height:100vh;-webkit-font-smoothing:antialiased}
+  .topbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 22px;border-bottom:1px solid var(--p-line);background:var(--p-panel);position:sticky;top:0;z-index:5}
+  .topbar h1{font-family:"Playfair Display",serif;font-size:20px;margin-right:auto}
+  .btn{font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;border-radius:9px;padding:9px 14px;border:1px solid var(--p-line);background:var(--p-panel-2);color:var(--p-text);transition:.15s}
+  .btn:hover{border-color:var(--p-accent);transform:translateY(-1px)}
+  .btn.primary{background:var(--p-accent);color:#1a1408;border-color:var(--p-accent)}
+  .btn.ghost{background:transparent}
+  .wrap{display:grid;grid-template-columns:1fr 420px;gap:0;align-items:start}
+  @media(max-width:980px){.wrap{grid-template-columns:1fr}.preview-col{position:static!important;border-left:none!important;border-top:1px solid var(--p-line)}}
+  .editor{padding:22px;max-width:760px}
+  .preview-col{position:sticky;top:61px;height:calc(100vh - 61px);border-left:1px solid var(--p-line);background:#0d0d0d;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:10px}
+  .phone{width:340px;max-width:100%;flex:1;max-height:620px;border-radius:30px;overflow:hidden;border:8px solid #000;box-shadow:0 20px 60px rgba(0,0,0,.5);background:#000}
+  .phone iframe{width:100%;height:100%;border:0;display:block}
+  .preview-note{font-size:11px;color:var(--p-muted);text-align:center;max-width:300px}
+  .section{border:1px solid var(--p-line);border-radius:14px;margin-bottom:16px;overflow:hidden}
+  .section>h2{font-size:14px;font-weight:600;padding:13px 16px;background:var(--p-panel);cursor:pointer;display:flex;align-items:center;justify-content:space-between}
+  .section>h2 .arrow{transition:.2s;color:var(--p-muted)}
+  .section.collapsed>h2 .arrow{transform:rotate(-90deg)}
+  .section-body{padding:16px;display:grid;gap:14px}
+  .section.collapsed .section-body{display:none}
+  label{font-size:12px;color:var(--p-muted);display:block;margin-bottom:5px;font-weight:500}
+  input[type=text],input[type=url],input[type=email],select{width:100%;font-family:inherit;font-size:14px;color:var(--p-text);background:var(--p-panel-2);border:1px solid var(--p-line);border-radius:9px;padding:10px 12px}
+  input:focus,select:focus{outline:2px solid var(--p-accent);outline-offset:1px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:560px){.row{grid-template-columns:1fr}}
+  .color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+  .color-field{display:flex;align-items:center;gap:10px}
+  .color-field input[type=color]{width:40px;height:40px;border:1px solid var(--p-line);border-radius:8px;background:none;cursor:pointer;padding:2px}
+  .color-field .cf-text{flex:1}.color-field label{margin:0 0 2px}
+  .presets{display:flex;gap:8px;flex-wrap:wrap}
+  .preset{font-size:12px;padding:7px 12px;border-radius:20px;border:1px solid var(--p-line);background:var(--p-panel-2);color:var(--p-text);cursor:pointer}
+  .preset:hover{border-color:var(--p-accent)}
+  .hint{font-size:11px;color:var(--p-muted);margin-top:-6px}
+  .thumb{margin-top:8px;width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid var(--p-line);display:none}
+  .link-item{border:1px solid var(--p-line);border-radius:12px;padding:14px;background:var(--p-panel)}
+  .link-item.child{background:var(--p-panel-2);margin-top:10px}
+  .li-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+  .li-head .tag{font-size:11px;color:var(--p-accent);font-weight:600;margin-right:auto}
+  .icon-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--p-line);background:var(--p-panel-2);color:var(--p-text);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
+  .icon-btn:hover{border-color:var(--p-accent)}
+  .icon-btn.del:hover{border-color:var(--p-danger);color:var(--p-danger)}
+  .children-box{margin-top:6px;padding-left:14px;border-left:2px dashed var(--p-line)}
+  .toggle-line{display:flex;align-items:center;gap:8px;font-size:13px}.toggle-line input{width:auto}
+  .add-btn{width:100%;border:1px dashed var(--p-line);background:transparent;color:var(--p-muted);border-radius:10px;padding:11px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600}
+  .add-btn:hover{border-color:var(--p-accent);color:var(--p-accent)}
+  .file-hidden{display:none}
+  .banner{font-size:12px;background:rgba(194,162,97,.12);border:1px solid var(--p-accent);color:#e7d6ad;border-radius:10px;padding:11px 14px;margin-bottom:16px;line-height:1.5}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>Admin da Página</h1>
+  <button class="btn ghost" id="btnLoad">Carregar backup (.json)</button>
+  <button class="btn ghost" id="btnSave">Salvar backup (.json)</button>
+  <button class="btn primary" id="btnExport">⬇ Baixar config.js</button>
+  <input type="file" id="fileInput" accept=".json" class="file-hidden">
+</div>
+
+<div class="wrap">
+  <div class="editor">
+    <div class="banner">
+      Edite tudo aqui e veja a prévia ao lado. Quando terminar, clique em <b>Baixar config.js</b>
+      e substitua o arquivo <code>config.js</code> no servidor (mesma pasta do site). Pronto — a página pública atualiza.
+    </div>
+    <div id="form"></div>
+  </div>
+  <div class="preview-col">
+    <div class="phone"><iframe id="preview" title="Prévia"></iframe></div>
+    <p class="preview-note">Prévia real (usa seu style.css e script.js). Abra este admin pelo site publicado para a prévia carregar os estilos.</p>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   Estado: começa do config.js publicado (window.SITE_CONFIG),
+   ou de um padrão se o admin for aberto sozinho.
+   ============================================================ */
+var DEFAULT = {
+  nome:"Marilia Santos", descricao:"Especialista em Coloração Pessoal", foto:"",
+  headerEstilo:"cartao",
+  fundo:{tipo:"cor",cor:"#0c0c0c",imagem:""},
+  cores:{accent:"#c2a261",accentText:"#1a1408",card:"#161514",cardOpen:"#1f1d1a",text:"#f4efe6",muted:"#a39a8c",line:"#3a352d"},
+  redes:{instagram:"https://instagram.com/mariliasantoscolor",whatsapp:"",site:"",facebook:"",youtube:"",tiktok:"",email:""},
+  links:[
+    {titulo:"Descobrir minhas Cores e Cabelo Ideal",sub:"",url:"https://www.mariliasantoscolor.com.br/"},
+    {titulo:"Quero trabalhar com Coloração Pessoal",sub:"Escolha por onde começar",filhos:[
+      {titulo:"Curso Cabeleireiros e Consultores",sub:"Análise da íris + Simulação com IA",url:"https://capilar.mariliasantoscolor.site/"},
+      {titulo:"Curso Domine o Subtom de Pele",sub:"",url:"https://colorimetria.mariliasantoscolor.site/"},
+      {titulo:"Plataforma MS Color IA",sub:"Para consultores",url:"https://mscoloria.vercel.app/"}
+    ]},
+    {titulo:"Cartelas e Materiais",sub:"Toque para ver as opções",filhos:[
+      {titulo:"Cartelas físicas",sub:"",url:"https://www.mariliasantoscolor.site/"},
+      {titulo:"Materiais digitais",sub:"",url:"https://www.mariliasantoscolor.site/"},
+      {titulo:"Falar no WhatsApp",sub:"",url:"https://wa.me/5500000000000"}
+    ]}
+  ]
+};
+
+function clone(o){ return JSON.parse(JSON.stringify(o)); }
+function merge(base, over){ // garante todas as chaves mesmo se o config publicado for antigo
+  var out = clone(base);
+  if(!over) return out;
+  Object.keys(over).forEach(function(k){
+    if(k==="cores"||k==="redes"||k==="fundo"){ out[k]=Object.assign({}, base[k], over[k]); }
+    else { out[k]=over[k]; }
+  });
+  return out;
+}
+
+var state = merge(DEFAULT, window.SITE_CONFIG);
+
+var PRESETS = {
+  "Ouro escuro":{fundoCor:"#0c0c0c",card:"#161514",cardOpen:"#1f1d1a",accent:"#c2a261",accentText:"#1a1408",text:"#f4efe6",muted:"#a39a8c",line:"#3a352d"},
+  "Creme claro":{fundoCor:"#f3ede1",card:"#ffffff",cardOpen:"#faf5ea",accent:"#b08d57",accentText:"#ffffff",text:"#2c2620",muted:"#7a7064",line:"#ddd2bf"},
+  "Rosé":{fundoCor:"#1a1416",card:"#261b1f",cardOpen:"#30222a",accent:"#d98aa0",accentText:"#1a1416",text:"#f6ecef",muted:"#b69aa1",line:"#4a373d"},
+  "Verde-musgo":{fundoCor:"#11160f",card:"#1a2016",cardOpen:"#232b1c",accent:"#a7b878",accentText:"#11160f",text:"#eef1e6",muted:"#9aa389",line:"#343b29"}
+};
+
+/* ============================================================
+   Prévia: usa os arquivos reais (style.css + script.js)
+   ============================================================ */
+var previewTimer=null;
+function buildPreviewDoc(cfg){
+  return '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">'
+    +'<meta name="viewport" content="width=device-width, initial-scale=1.0">'
+    +'<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
+    +'<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">'
+    +'<link rel="stylesheet" href="style.css"></head><body>'
+    +'<main class="page"><header class="header" id="header"></header>'
+    +'<nav class="links" id="links" aria-label="Meus links"></nav>'
+    +'<footer class="footer">© <span id="ano"></span> <span id="footer-nome"></span></footer></main>'
+    +'<script>window.SITE_CONFIG='+JSON.stringify(cfg)+';<\/script>'
+    +'<script src="script.js"><\/script></body></html>';
+}
+function refreshPreview(){
+  clearTimeout(previewTimer);
+  previewTimer=setTimeout(function(){ document.getElementById("preview").srcdoc=buildPreviewDoc(state); },120);
+}
+
+/* ============================================================
+   Formulário
+   ============================================================ */
+function esc(s){ return (s||"").replace(/"/g,"&quot;").replace(/</g,"&lt;"); }
+function getPath(o,p){ return p.split(".").reduce(function(a,k){return a?a[k]:undefined;},o); }
+function setPath(o,p,v){ var ps=p.split("."),last=ps.pop(); ps.reduce(function(a,k){return a[k];},o)[last]=v; }
+
+function renderForm(){
+  document.getElementById("form").innerHTML = ''
+  + sec("perfil","Perfil",
+      field("Nome","text","nome")
+      + field("Descrição / subtítulo","text","descricao")
+      + '<div><label>Foto (link da imagem)</label><input type="url" data-path="foto" value="'+esc(state.foto)+'" placeholder="https://..."><img class="thumb" id="thumb-foto"><p class="hint">Vazio = mostra as iniciais.</p></div>'
+      + '<div><label>Estilo do cabeçalho</label><select data-path="headerEstilo">'
+        +'<option value="cartao"'+(state.headerEstilo==="cartao"?" selected":"")+'>Cartão com foto grande</option>'
+        +'<option value="circulo"'+(state.headerEstilo==="circulo"?" selected":"")+'>Foto redonda pequena</option></select></div>'
+    )
+  + sec("aparencia","Aparência & Cores",
+      '<div><label>Temas prontos</label><div class="presets" id="presets"></div></div>'
+      + '<div><label>Fundo da página</label><select data-path="fundo.tipo">'
+        +'<option value="cor"'+(state.fundo.tipo==="cor"?" selected":"")+'>Cor sólida</option>'
+        +'<option value="imagem"'+(state.fundo.tipo==="imagem"?" selected":"")+'>Imagem de fundo</option></select></div>'
+      + '<div class="row"><div class="color-field"><input type="color" data-path="fundo.cor" value="'+state.fundo.cor+'"><div class="cf-text"><label>Cor de fundo</label><input type="text" data-path="fundo.cor" value="'+esc(state.fundo.cor)+'"></div></div>'
+      + '<div><label>Imagem de fundo (link)</label><input type="url" data-path="fundo.imagem" value="'+esc(state.fundo.imagem)+'" placeholder="https://..."><img class="thumb" id="thumb-fundo"></div></div>'
+      + '<div><label>Cores personalizadas</label><div class="color-grid">'
+        + cf("Botão principal","cores.accent") + cf("Texto do botão","cores.accentText")
+        + cf("Cartão / link","cores.card") + cf("Sublink aberto","cores.cardOpen")
+        + cf("Texto geral","cores.text") + cf("Texto fraco","cores.muted") + cf("Linhas/bordas","cores.line")
+      + '</div></div>'
+    )
+  + sec("redes","Redes Sociais",
+      '<p class="hint" style="margin-top:0">Deixe vazio para esconder o ícone.</p><div class="row">'
+      + field("Instagram","url","redes.instagram") + field("WhatsApp","url","redes.whatsapp")
+      + field("Site","url","redes.site") + field("Facebook","url","redes.facebook")
+      + field("YouTube","url","redes.youtube") + field("TikTok","url","redes.tiktok")
+      + field("E-mail","email","redes.email") + '</div>'
+    )
+  + sec("links","Links (árvore)",
+      '<p class="hint" style="margin-top:0">Marque "Tem sublinks?" para virar um menu que abre outros links.</p>'
+      + '<div id="linksList"></div><button class="add-btn" data-action="add-main">+ Adicionar link principal</button>'
+    );
+
+  var pw=document.getElementById("presets");
+  Object.keys(PRESETS).forEach(function(n){ var b=document.createElement("button"); b.className="preset"; b.textContent=n; b.onclick=function(){applyPreset(n);}; pw.appendChild(b); });
+
+  renderLinks(); bindInputs(); bindSections(); updateThumbs();
+}
+function sec(id,t,inner){ return '<div class="section" data-sec="'+id+'"><h2 data-toggle="'+id+'">'+t+'<span class="arrow">▾</span></h2><div class="section-body">'+inner+'</div></div>'; }
+function field(label,type,path){ return '<div><label>'+label+'</label><input type="'+type+'" data-path="'+path+'" value="'+esc(getPath(state,path))+'"></div>'; }
+function cf(label,path){ var v=getPath(state,path); return '<div class="color-field"><input type="color" data-path="'+path+'" value="'+v+'"><div class="cf-text"><label>'+label+'</label><input type="text" data-path="'+path+'" value="'+esc(v)+'"></div></div>'; }
+
+function renderLinks(){
+  var box=document.getElementById("linksList"); box.innerHTML="";
+  state.links.forEach(function(item,i){
+    var temFilhos=Array.isArray(item.filhos);
+    var h='<div class="link-item"><div class="li-head"><span class="tag">Link principal '+(i+1)+'</span>'
+      +'<button class="icon-btn" data-action="up-main" data-i="'+i+'">↑</button>'
+      +'<button class="icon-btn" data-action="down-main" data-i="'+i+'">↓</button>'
+      +'<button class="icon-btn del" data-action="del-main" data-i="'+i+'">✕</button></div>'
+      +'<div class="row"><div><label>Título</label><input type="text" data-link="'+i+'" data-field="titulo" value="'+esc(item.titulo)+'"></div>'
+      +'<div><label>Subtítulo (opcional)</label><input type="text" data-link="'+i+'" data-field="sub" value="'+esc(item.sub)+'"></div></div>'
+      +'<label class="toggle-line" style="margin-top:10px"><input type="checkbox" data-action="toggle-children" data-i="'+i+'"'+(temFilhos?" checked":"")+'> Tem sublinks?</label>';
+    if(temFilhos){
+      h+='<div class="children-box">';
+      item.filhos.forEach(function(f,j){
+        h+='<div class="link-item child"><div class="li-head"><span class="tag">Sublink '+(j+1)+'</span>'
+          +'<button class="icon-btn" data-action="up-child" data-i="'+i+'" data-j="'+j+'">↑</button>'
+          +'<button class="icon-btn" data-action="down-child" data-i="'+i+'" data-j="'+j+'">↓</button>'
+          +'<button class="icon-btn del" data-action="del-child" data-i="'+i+'" data-j="'+j+'">✕</button></div>'
+          +'<div class="row"><div><label>Título</label><input type="text" data-child="'+i+'-'+j+'" data-field="titulo" value="'+esc(f.titulo)+'"></div>'
+          +'<div><label>Subtítulo (opcional)</label><input type="text" data-child="'+i+'-'+j+'" data-field="sub" value="'+esc(f.sub)+'"></div></div>'
+          +'<div style="margin-top:10px"><label>Link (URL de destino)</label><input type="url" data-child="'+i+'-'+j+'" data-field="url" value="'+esc(f.url)+'" placeholder="https://..."></div></div>';
+      });
+      h+='<button class="add-btn" data-action="add-child" data-i="'+i+'" style="margin-top:10px">+ Adicionar sublink</button></div>';
+    } else {
+      h+='<div style="margin-top:10px"><label>Link (URL de destino)</label><input type="url" data-link="'+i+'" data-field="url" value="'+esc(item.url||"")+'" placeholder="https://..."></div>';
+    }
+    h+='</div>';
+    box.insertAdjacentHTML("beforeend",h);
+  });
+  bindLinkInputs(); bindActions();
+}
+
+function updateThumbs(){
+  [["foto","thumb-foto"],["fundo.imagem","thumb-fundo"]].forEach(function(p){
+    var url=getPath(state,p[0]), img=document.getElementById(p[1]); if(!img) return;
+    if(url){ img.src=url; img.style.display="block"; img.onerror=function(){img.style.display="none";}; }
+    else img.style.display="none";
+  });
+}
+
+function bindInputs(){
+  document.querySelectorAll('#form [data-path]').forEach(function(el){
+    var ev=el.tagName==="SELECT"?"change":"input";
+    el.addEventListener(ev,function(){
+      setPath(state,el.dataset.path,el.value);
+      document.querySelectorAll('[data-path="'+el.dataset.path+'"]').forEach(function(o){ if(o!==el) o.value=el.value; });
+      if(el.dataset.path==="foto"||el.dataset.path==="fundo.imagem") updateThumbs();
+      refreshPreview();
+    });
+  });
+}
+function bindLinkInputs(){
+  document.querySelectorAll('#linksList [data-link]').forEach(function(el){
+    el.addEventListener("input",function(){ state.links[+el.dataset.link][el.dataset.field]=el.value; refreshPreview(); });
+  });
+  document.querySelectorAll('#linksList [data-child]').forEach(function(el){
+    el.addEventListener("input",function(){ var p=el.dataset.child.split("-"); state.links[+p[0]].filhos[+p[1]][el.dataset.field]=el.value; refreshPreview(); });
+  });
+}
+function bindActions(){
+  document.querySelectorAll('#form [data-action]').forEach(function(el){
+    var ev=el.type==="checkbox"?"change":"click";
+    el.addEventListener(ev,function(){ handleAction(el.dataset); });
+  });
+}
+function handleAction(d){
+  var i=d.i!==undefined?+d.i:null, j=d.j!==undefined?+d.j:null, a;
+  switch(d.action){
+    case "add-main": state.links.push({titulo:"Novo link",sub:"",url:"https://"}); break;
+    case "del-main": state.links.splice(i,1); break;
+    case "up-main": if(i>0){a=state.links;var t=a[i-1];a[i-1]=a[i];a[i]=t;} break;
+    case "down-main": if(i<state.links.length-1){a=state.links;var u=a[i+1];a[i+1]=a[i];a[i]=u;} break;
+    case "toggle-children":
+      if(state.links[i].filhos){ delete state.links[i].filhos; if(state.links[i].url===undefined) state.links[i].url="https://"; }
+      else { state.links[i].filhos=[{titulo:"Novo sublink",sub:"",url:"https://"}]; }
+      break;
+    case "add-child": state.links[i].filhos.push({titulo:"Novo sublink",sub:"",url:"https://"}); break;
+    case "del-child": state.links[i].filhos.splice(j,1); if(!state.links[i].filhos.length){ delete state.links[i].filhos; state.links[i].url="https://"; } break;
+    case "up-child": a=state.links[i].filhos; if(j>0){var v=a[j-1];a[j-1]=a[j];a[j]=v;} break;
+    case "down-child": a=state.links[i].filhos; if(j<a.length-1){var w=a[j+1];a[j+1]=a[j];a[j]=w;} break;
+    default: return;
+  }
+  renderLinks(); refreshPreview();
+}
+function applyPreset(n){ var p=PRESETS[n]; state.fundo.cor=p.fundoCor; state.cores={card:p.card,cardOpen:p.cardOpen,accent:p.accent,accentText:p.accentText,text:p.text,muted:p.muted,line:p.line}; renderForm(); refreshPreview(); }
+function bindSections(){ document.querySelectorAll('#form [data-toggle]').forEach(function(h){ h.addEventListener("click",function(){ h.closest(".section").classList.toggle("collapsed"); }); }); }
+
+/* ============================================================
+   Exportar config.js / backup
+   ============================================================ */
+function download(name,content,type){
+  var blob=new Blob([content],{type:type}), url=URL.createObjectURL(blob), a=document.createElement("a");
+  a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+}
+function buildConfigJS(){
+  return "/* Gerado pelo admin em "+new Date().toLocaleString("pt-BR")+". Substitua o config.js do servidor por este. */\n"
+    + "window.SITE_CONFIG = " + JSON.stringify(state, null, 2) + ";\n";
+}
+document.getElementById("btnExport").onclick=function(){ download("config.js", buildConfigJS(), "text/javascript"); };
+document.getElementById("btnSave").onclick=function(){ download("backup-pagina.json", JSON.stringify(state,null,2), "application/json"); };
+document.getElementById("btnLoad").onclick=function(){ document.getElementById("fileInput").click(); };
+document.getElementById("fileInput").onchange=function(ev){
+  var f=ev.target.files[0]; if(!f) return; var r=new FileReader();
+  r.onload=function(){ try{ state=merge(DEFAULT, JSON.parse(r.result)); renderForm(); refreshPreview(); }catch(e){ alert("Arquivo inválido."); } };
+  r.readAsText(f); ev.target.value="";
+};
+
+renderForm();
+refreshPreview();
+</script>
+
+</body>
+</html>

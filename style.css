@@ -1,0 +1,115 @@
+/* =============================================================
+   ESTILOS DA PÁGINA
+   As cores vêm do config.js (aplicadas via variáveis CSS).
+   Normalmente você não precisa editar este arquivo.
+   ============================================================= */
+
+:root{
+  --bg:#0c0c0c; --card:#161514; --card-open:#1f1d1a;
+  --accent:#c2a261; --accent-text:#1a1408;
+  --text:#f4efe6; --muted:#a39a8c; --line:#3a352d;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+
+body{
+  font-family:"Montserrat",sans-serif;
+  color:var(--text);
+  min-height:100vh;
+  display:flex; justify-content:center;
+  padding:34px 18px 50px;
+  -webkit-font-smoothing:antialiased;
+}
+
+.page{ width:100%; max-width:460px; }
+
+/* ---------- Cabeçalho ---------- */
+.header{ text-align:center; margin-bottom:28px; }
+
+/* foto redonda */
+.avatar{
+  width:116px; height:116px; border-radius:50%; object-fit:cover;
+  margin:0 auto 16px; display:block;
+  border:2px solid var(--accent); background:var(--card);
+}
+.avatar.fallback{
+  display:flex; align-items:center; justify-content:center;
+  font-family:"Playfair Display",serif; font-size:40px; color:var(--accent);
+}
+
+/* foto grande estilo cartão */
+.hero-card{
+  position:relative; width:100%; aspect-ratio:1/1.15;
+  border-radius:18px; overflow:hidden; margin-bottom:14px;
+  background-position:center; background-size:cover;
+}
+.hero-initials{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-family:"Playfair Display",serif; font-size:64px; color:var(--accent);
+}
+.hero-overlay{
+  position:absolute; left:0; right:0; bottom:0; padding:50px 18px 16px;
+  background:linear-gradient(to top, rgba(0,0,0,.85), rgba(0,0,0,.55) 45%, transparent);
+}
+.hero-overlay .name{ color:#fff; }
+.hero-overlay .tagline{ color:#e7ddca; }
+
+.name{ font-family:"Playfair Display",serif; font-size:30px; font-weight:700; letter-spacing:.5px; }
+.tagline{ color:var(--muted); font-size:14px; margin-top:4px; }
+
+.socials{ margin-top:14px; display:flex; gap:14px; justify-content:center; }
+.socials a{
+  width:38px; height:38px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  color:var(--text); border:1px solid var(--line); transition:.2s;
+}
+.socials a:hover{ color:var(--accent); border-color:var(--accent); transform:translateY(-2px); }
+.socials svg{ width:20px; height:20px; }
+
+/* ---------- Links / árvore ---------- */
+.links{ display:flex; flex-direction:column; gap:12px; }
+
+.link-btn{
+  width:100%; background:var(--card); color:var(--text);
+  border:1px solid var(--line); border-radius:14px; padding:16px 18px;
+  font-family:inherit; font-size:15px; font-weight:500;
+  text-align:center; text-decoration:none; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  transition:transform .15s, border-color .2s;
+}
+.link-btn:hover{ transform:translateY(-2px); border-color:var(--accent); }
+.link-btn:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+/* link principal (tem filhos) */
+.has-children > .link-btn{
+  background:var(--accent); color:var(--accent-text);
+  border-color:var(--accent); font-weight:600; justify-content:space-between;
+}
+.has-children .label-wrap{ flex:1; }
+.chevron{ transition:transform .3s; flex-shrink:0; }
+.node.open > .link-btn .chevron{ transform:rotate(180deg); }
+
+.sublabel{ display:block; font-size:12px; font-weight:400; opacity:.85; margin-top:2px; }
+
+/* expandir/recolher */
+.children{ display:grid; grid-template-rows:0fr; transition:grid-template-rows .32s ease; }
+.node.open > .children{ grid-template-rows:1fr; }
+.children-inner{ overflow:hidden; }
+
+/* galhos da árvore */
+.children .node{ position:relative; margin-left:22px; padding-top:12px; }
+.children .node::before{
+  content:""; position:absolute; left:-12px; top:-6px; bottom:50%;
+  width:1px; background:var(--line);
+}
+.children .node::after{
+  content:""; position:absolute; left:-12px; top:calc(50% + 6px);
+  width:12px; height:1px; background:var(--line);
+}
+.children .node:last-child::before{ bottom:auto; height:calc(50% + 18px); }
+.children .link-btn{ background:var(--card-open); font-size:14px; padding:13px 16px; }
+
+/* ---------- Rodapé ---------- */
+.footer{ text-align:center; margin-top:32px; font-size:12px; color:var(--muted); }
+
+@media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
