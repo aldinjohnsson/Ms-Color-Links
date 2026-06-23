@@ -1,4 +1,4 @@
-/* Gerado pelo admin em 23/06/2026, 17:53:12. Substitua o config.js do servidor por este. */
+/* Gerado pelo admin em 23/06/2026, 18:01:39. Substitua o config.js do servidor por este. */
 window.SITE_CONFIG = {
   "nome": "Marilia Santos",
   "descricao": "Especialista em Coloração Pessoal",
@@ -10,16 +10,16 @@ window.SITE_CONFIG = {
     "imagem": ""
   },
   "cores": {
-    "card": "#161514",
-    "cardOpen": "#1f1d1a",
     "accent": "#c2a261",
     "accentText": "#1a1408",
+    "card": "#161514",
+    "cardOpen": "#1f1d1a",
     "text": "#f4efe6",
     "muted": "#a39a8c",
     "line": "#3a352d"
   },
   "redes": {
-    "instagram": "https://instagram.com/mariliasantoscolor",
+    "instagram": "https://www.instagram.com/mariliasantosjh/",
     "whatsapp": "+5541984672087",
     "site": "",
     "facebook": "",
