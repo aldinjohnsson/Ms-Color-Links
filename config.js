@@ -1,4 +1,4 @@
-/* Gerado pelo admin em 23/06/2026, 18:01:39. Substitua o config.js do servidor por este. */
+/* Gerado pelo admin em 23/06/2026, 18:03:24. Substitua o config.js do servidor por este. */
 window.SITE_CONFIG = {
   "nome": "Marilia Santos",
   "descricao": "Especialista em Coloração Pessoal",
@@ -20,7 +20,7 @@ window.SITE_CONFIG = {
   },
   "redes": {
     "instagram": "https://www.instagram.com/mariliasantosjh/",
-    "whatsapp": "+5541984672087",
+    "whatsapp": "",
     "site": "",
     "facebook": "",
     "youtube": "",
