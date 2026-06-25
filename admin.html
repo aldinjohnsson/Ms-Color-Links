@@ -96,6 +96,7 @@ var DEFAULT = {
   fundo:{tipo:"cor",cor:"#0c0c0c",imagem:""},
   cores:{accent:"#c2a261",accentText:"#1a1408",card:"#161514",cardOpen:"#1f1d1a",text:"#f4efe6",muted:"#a39a8c",line:"#3a352d"},
   redes:{instagram:"https://instagram.com/mariliasantoscolor",whatsapp:"",site:"",facebook:"",youtube:"",tiktok:"",email:""},
+  redesCores:{instagram:"",whatsapp:"",site:"",facebook:"",youtube:"",tiktok:"",email:""},
   links:[
     {titulo:"Descobrir minhas Cores e Cabelo Ideal",sub:"",url:"https://www.mariliasantoscolor.com.br/"},
     {titulo:"Quero trabalhar com Coloração Pessoal",sub:"Escolha por onde começar",filhos:[
@@ -116,7 +117,7 @@ function merge(base, over){ // garante todas as chaves mesmo se o config publica
   var out = clone(base);
   if(!over) return out;
   Object.keys(over).forEach(function(k){
-    if(k==="cores"||k==="redes"||k==="fundo"){ out[k]=Object.assign({}, base[k], over[k]); }
+    if(k==="cores"||k==="redes"||k==="redesCores"||k==="fundo"){ out[k]=Object.assign({}, base[k], over[k]); }
     else { out[k]=over[k]; }
   });
   return out;
@@ -159,6 +160,18 @@ function esc(s){ return (s||"").replace(/"/g,"&quot;").replace(/</g,"&lt;"); }
 function getPath(o,p){ return p.split(".").reduce(function(a,k){return a?a[k]:undefined;},o); }
 function setPath(o,p,v){ var ps=p.split("."),last=ps.pop(); ps.reduce(function(a,k){return a[k];},o)[last]=v; }
 
+function redesField(label, key) {
+  var url = esc(getPath(state, "redes." + key) || "");
+  var cor = esc(getPath(state, "redesCores." + key) || "");
+  var tipo = key === "email" ? "email" : "url";
+  return '<div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end">'
+    + '<div><label>' + label + '</label><input type="' + tipo + '" data-path="redes.' + key + '" value="' + url + '" placeholder="https://..."></div>'
+    + '<div style="display:flex;flex-direction:column;align-items:center;gap:2px">'
+    + '<label style="font-size:10px;white-space:nowrap">Cor ícone</label>'
+    + '<input type="color" data-path="redesCores.' + key + '" value="' + (cor || "#f4efe6") + '" title="Cor do ícone ' + label + '" style="width:40px;height:36px;border:1px solid var(--p-line);border-radius:8px;background:none;cursor:pointer;padding:2px">'
+    + '</div></div>';
+}
+
 function renderForm(){
   document.getElementById("form").innerHTML = ''
   + sec("perfil","Perfil",
@@ -183,11 +196,11 @@ function renderForm(){
       + '</div></div>'
     )
   + sec("redes","Redes Sociais",
-      '<p class="hint" style="margin-top:0">Deixe vazio para esconder o ícone.</p><div class="row">'
-      + field("Instagram","url","redes.instagram") + field("WhatsApp","url","redes.whatsapp")
-      + field("Site","url","redes.site") + field("Facebook","url","redes.facebook")
-      + field("YouTube","url","redes.youtube") + field("TikTok","url","redes.tiktok")
-      + field("E-mail","email","redes.email") + '</div>'
+      '<p class="hint" style="margin-top:0">Deixe vazio para esconder o ícone. A cor é opcional — vazio usa a cor padrão do tema.</p><div style="display:grid;gap:10px">'
+      + redesField("Instagram","instagram") + redesField("WhatsApp","whatsapp")
+      + redesField("Site","site") + redesField("Facebook","facebook")
+      + redesField("YouTube","youtube") + redesField("TikTok","tiktok")
+      + redesField("E-mail","email") + '</div>'
     )
   + sec("links","Links (árvore)",
       '<p class="hint" style="margin-top:0">Marque "Tem sublinks?" para virar um menu que abre outros links.</p>'

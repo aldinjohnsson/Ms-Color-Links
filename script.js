@@ -101,7 +101,9 @@
       var url = (c.redes || {})[r];
       if (!url) return;
       if (r === "email") url = "mailto:" + url;
-      redes += '<a href="' + url + '" target="_blank" rel="noopener" aria-label="' + r + '">' + ICONS[r] + '</a>';
+      var cor = (c.redesCores || {})[r];
+      var style = cor ? ' style="color:' + cor + '"' : '';
+      redes += '<a href="' + url + '" target="_blank" rel="noopener" aria-label="' + r + '"' + style + '>' + ICONS[r] + '</a>';
     });
     if (redes) header += '<div class="socials">' + redes + '</div>';
 

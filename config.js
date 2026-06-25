@@ -1,4 +1,4 @@
-/* Gerado pelo admin em 23/06/2026, 18:03:24. Substitua o config.js do servidor por este. */
+/* Gerado pelo admin em 25/06/2026, 15:25:01. Substitua o config.js do servidor por este. */
 window.SITE_CONFIG = {
   "nome": "Marilia Santos",
   "descricao": "Especialista em Coloração Pessoal",
@@ -12,14 +12,23 @@ window.SITE_CONFIG = {
   "cores": {
     "accent": "#c2a261",
     "accentText": "#1a1408",
-    "card": "#161514",
-    "cardOpen": "#1f1d1a",
-    "text": "#f4efe6",
+    "card": "#c2a261",
+    "cardOpen": "#c2a261",
+    "text": "#000000",
     "muted": "#a39a8c",
-    "line": "#3a352d"
+    "line": "#3e3d3c"
   },
   "redes": {
     "instagram": "https://www.instagram.com/mariliasantosjh/",
+    "whatsapp": "",
+    "site": "",
+    "facebook": "",
+    "youtube": "",
+    "tiktok": "",
+    "email": ""
+  },
+  "redesCores": {
+    "instagram": "#f7f7f7",
     "whatsapp": "",
     "site": "",
     "facebook": "",
@@ -35,7 +44,7 @@ window.SITE_CONFIG = {
     },
     {
       "titulo": "Quero trabalhar com Coloração Pessoal",
-      "sub": "",
+      "sub": "Toque para ver as opções",
       "filhos": [
         {
           "titulo": "Curso Completo de Coloração Pessoal",
@@ -61,7 +70,7 @@ window.SITE_CONFIG = {
     },
     {
       "titulo": "Cartelas e Materiais",
-      "sub": "Toque para ver as opções",
+      "sub": "",
       "url": "https://mscolors.lojavirtualnuvem.com.br/pos-coloracao/materiais1/"
     }
   ]
