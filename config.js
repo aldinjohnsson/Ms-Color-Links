@@ -1,4 +1,4 @@
-/* Gerado pelo admin em 25/06/2026, 15:25:01. Substitua o config.js do servidor por este. */
+/* Gerado pelo admin em 19/08/2026, 10:52:04. Substitua o config.js do servidor por este. */
 window.SITE_CONFIG = {
   "nome": "Marilia Santos",
   "descricao": "Especialista em Coloração Pessoal",
@@ -71,7 +71,7 @@ window.SITE_CONFIG = {
     {
       "titulo": "Cartelas e Materiais",
       "sub": "",
-      "url": "https://mscolors.lojavirtualnuvem.com.br/pos-coloracao/materiais1/"
+      "url": "https://www.mariliasantoscolor.com.br/loja/"
     }
   ]
 };
