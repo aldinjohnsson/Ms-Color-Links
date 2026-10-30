@@ -1,4 +1,4 @@
-/* Gerado pelo admin em 30/10/2026, 17:43:29. Substitua o config.js do servidor por este. */
+/* Gerado pelo admin em 30/10/2026, 17:56:16. Substitua o config.js do servidor por este. */
 window.SITE_CONFIG = {
   "nome": "Marilia Santos",
   "descricao": "Especialista em Coloração Pessoal",
@@ -54,17 +54,17 @@ window.SITE_CONFIG = {
         {
           "titulo": "Curso Cabeleireiros e Consultores",
           "sub": "",
-          "url": "sitecurso-two.vercel.app"
+          "url": "https://capilar.mariliasantoscolor.com.br/"
         },
         {
           "titulo": "Curso Domine o Subtom de Pele",
           "sub": "",
-          "url": "https://colorimetria.mariliasantoscolor.site/"
+          "url": "https://subtom.mariliasantoscolor.com.br/"
         },
         {
           "titulo": "Plataforma MS Color IA",
           "sub": "",
-          "url": "https://mscoloria.vercel.app/"
+          "url": "https://mscoloria.mariliasantoscolor.com.br/"
         }
       ]
     },
